@@ -1,6 +1,5 @@
-from datetime import datetime
 from flask import Blueprint, flash, redirect, render_template, url_for
-from flask_login import current_user, login_required, login_user, logout_user
+from flask_login import login_required, login_user, logout_user
 from mib.forms import LoginForm
 from mib.rao.user_manager import UserManager
 
@@ -29,13 +28,7 @@ def login(re=False):
         else:
             # user is authenticated
             login_user(user)
-
-            if user.type == 'operator':
-                return redirect(url_for('auth.operator', op_id=user.id))
-            elif user.type == 'customer':
-                return redirect(url_for('auth.profile', id=user.id))
-            else:
-                return redirect('/authority/%d/0' % user.id)
+            return redirect(url_for('home.index'))
 
     return render_template('login.html', form=form, re_login=re)
 

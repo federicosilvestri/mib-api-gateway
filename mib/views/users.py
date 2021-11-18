@@ -34,13 +34,18 @@ def create_user():
             phone
         )
 
-        user = response.json()
-        if user["status"] == "success":
+        if response.status_code == 201:
+            # in this case the request is ok!
+            user = response.json()
             to_login = User.build_from_json(user["user"])
             login_user(to_login)
-            return redirect(url_for('auth.profile', id=to_login.id))
+            return redirect(url_for('home.index', id=to_login.id))
+        elif response.status_code == 200:
+            # user already exists
+            flash('User already exists!')
+            return render_template('create_user.html', form=form)
         else:
-            flash("Invalid credentials")
+            flash('Unexpected response from users microservice!')
             return render_template('create_user.html', form=form)
     else:
         for fieldName, errorMessages in form.errors.items():

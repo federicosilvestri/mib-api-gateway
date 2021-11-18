@@ -85,7 +85,6 @@ class UserManager:
             url = "%s/user" % cls.USERS_ENDPOINT
             response = requests.post(url,
                                      json={
-                                         'type': 'customer',
                                          'email': email,
                                          'password': password,
                                          'firstname': firstname,
@@ -160,12 +159,15 @@ class UserManager:
         """
         payload = dict(email=email, password=password)
         try:
+            print('trying response....')
             response = requests.post('%s/authenticate' % cls.USERS_ENDPOINT,
                                      json=payload,
                                      timeout=cls.REQUESTS_TIMEOUT_SECONDS
                                      )
+            print('received response....')
             json_response = response.json()
         except (requests.exceptions.ConnectionError, requests.exceptions.Timeout):
+            # We can't connect to Users MS
             return abort(500)
 
         if response.status_code == 401:
