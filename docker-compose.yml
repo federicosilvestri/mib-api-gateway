@@ -6,8 +6,11 @@ services:
     # container_name: api_gateway
     # do not set a name to allow the replication
     #
-    restart: always
-    build: .
+    image: "mib-api-gateway"
+    build:
+        context: .
+        dockerfile: Dockerfile
+    restart: unless-stopped
     volumes:
     - static_contents:/static
     env_file:
@@ -41,12 +44,6 @@ services:
       - "80:80"
     depends_on:
       - api_gateway
-
-  # redis instance
-  redis_cache:
-    image: library/redis:6.0.9
-    ports:
-    - "6379:6379"
 
 volumes:
   nginx_conf:
