@@ -13,12 +13,11 @@ class User(UserMixin):
     is_admin = None
     authenticated = None
     is_anonymous = False
-    type = None
     extra_data = None
 
     @staticmethod
     def build_from_json(json: dict):
-        kw = {key: json[key] for key in ['id', 'email', 'is_active', 'authenticated', 'is_anonymous', 'type']}
+        kw = {key: json[key] for key in ['id', 'email', 'is_active', 'authenticated', 'is_anonymous']}
         extra = json.copy()
         all(map(extra.pop, kw))
         kw['extra'] = extra
